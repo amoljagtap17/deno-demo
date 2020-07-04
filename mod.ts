@@ -1,6 +1,7 @@
 import { join } from "https://deno.land/std/path/mod.ts";
 import { BufReader } from "https://deno.land/std/io/bufio.ts";
 import { parse } from "https://deno.land/std/encoding/csv.ts";
+import _ from "https://deno.land/x/deno_lodash/mod.ts";
 
 interface IPlanet {
   [key: string]: string;
@@ -29,8 +30,22 @@ const loadPlanetsData = async () => {
       stellarRadius > 0.99 && stellarRadius < 1.01;
   });
 
-  return planets;
+  return planets.map((planet) => {
+    return _.pick(planet, [
+      "koi_prad",
+      "koi_smass",
+      "koi_srad",
+      "kepler_name",
+      "koi_count",
+      "koi_steff",
+    ]);
+  });
 };
 
 const newPlanets = await loadPlanetsData();
+
+for (const planet of newPlanets) {
+  console.log(planet);
+}
+
 console.log(`${newPlanets.length} habitable planets found!`);
